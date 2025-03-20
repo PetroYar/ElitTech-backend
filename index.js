@@ -2,15 +2,25 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import authRouter from "./routes/authRoute.js";
+import surveyRouter from "./routes/survayRoute.js";
+import questionRouter from "./routes/questionRoute.js";
+import answerRouter from "./routes/answerRoute.js";
 
 const app = express();
 dotenv.config();
 
 app.use(express.json());
 app.use(cors());
+
 app.get("/", (req, res) => {
   res.send("<h1>Сервер працює! 🚀</h1>");
 });
+
+app.use("/api", authRouter);
+app.use("/api/survey", surveyRouter);
+app.use("/api/question", questionRouter);
+app.use("/api/answer", answerRouter);
 
 const startApp = async () => {
   try {
