@@ -12,7 +12,7 @@ const generateAccessToken = (id) => {
 
 const authController = {
   registration: async (req, res) => {
-    console.log(22)
+   
     try {
       const { username, email, password } = req.body;
 
@@ -20,14 +20,14 @@ const authController = {
       if (existUserName) {
         return res
           .status(400)
-          .json({ message: "A user with this username already exists" });
+          .json({ message: "Це імя вже зайняте" });
       }
 
       const existEmail = await User.findOne({ email });
       if (existEmail) {
         return res
           .status(400)
-          .json({ message: "A user with this email already exists" });
+          .json({ message: "Цей email вже використовується" });
       }
 
       const hashPass = bcrypt.hashSync(password, 7);
@@ -46,14 +46,14 @@ const authController = {
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
-
       const user = await User.findOne({ email });
-      if (!user) {
-        return res.status(401).json({ message: "Not a valid email" });
+      if (!user) { console.log(33)
+        return res.status(401).json({ message: "Не вірний email" });
+       
       }
       const validatePass = bcrypt.compareSync(password, user.password);
       if (!validatePass) {
-        return res.status(400).json({ message: "Not a valid password" });
+        return res.status(400).json({ message: "Не вірний пароль" });
       }
 
       const token = generateAccessToken(user._id);
