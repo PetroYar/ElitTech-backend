@@ -13,9 +13,7 @@ dotenv.config();
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (req, res) => {
-  res.send("<h1>Сервер працює! 🚀</h1>");
-});
+
 
 app.use("/api", authRouter);
 app.use("/api/survey", surveyRouter);

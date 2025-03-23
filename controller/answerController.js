@@ -4,8 +4,8 @@ const answerController = {
   create: async (req, res) => {
     try {
       const { surveyId, userId, userAnswers, startTime, endTime } = req.body;
-      console.log(req.body)
-      if (!surveyId || !userId || !userAnswers || !startTime || !endTime) {
+
+      if (!surveyId || !userId) {
         return res.status(400).json({ message: "All fields are required!" });
       }
 

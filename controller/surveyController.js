@@ -76,7 +76,7 @@ const surveyController = {
                   description: 1,
                   slug: 1,
                   questionCount: 1,
-                  passCount: { $size: "$answers" }, // Підрахунок кількості відповідей
+                  passCount: { $size: "$answers" },
                   createdAt: 1,
                   userId: 1,
                   user: { $arrayElemAt: ["$user", 0] },
@@ -180,7 +180,7 @@ const surveyController = {
       const survey = result[0];
 
       res.status(200).json({
-        surveyId: survey._id,
+        _id: survey._id,
         title: survey.title,
         description: survey.description,
         createdAt: survey.createdAt,
@@ -190,6 +190,37 @@ const surveyController = {
       return res
         .status(400)
         .json({ message: "Error retrieving survey", error });
+    }
+  },
+
+  update: async (req, res) => {
+    try {
+      const { slug } = req.params; 
+      const { title, description, questionCount } = req.body;
+
+      if (!slug) {
+        return res.status(400).json({ message: "Survey slug is required" });
+      }
+
+  
+      const survey = await Survey.findOne({ slug });
+      if (!survey) {
+        return res.status(404).json({ message: "Survey not found" });
+      }
+
+  
+      if (title) survey.title = title;
+      if (description) survey.description = description;
+      if (questionCount !== undefined) survey.questionCount = questionCount;
+
+      await survey.save();
+
+      return res.status(200).json({ message: "Survey updated successfully" });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ message: "Server error", error: error.message });
     }
   },
 };

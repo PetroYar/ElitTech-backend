@@ -6,8 +6,7 @@ const surveyRouter = Router();
 surveyRouter.post("/", surveyController.create);
 surveyRouter.get("/", surveyController.getAll);
 surveyRouter.get("/questions/:slug", surveyController.getSurveyBySlug);
-
+surveyRouter.put("/:slug", surveyController.update);
 surveyRouter.delete("/:id", surveyController.delete);
-
 
 export default surveyRouter;

@@ -18,8 +18,38 @@ const questionController = {
 
       await newQuestion.save();
 
-      return res.stats(200).json({
+      return res.status(200).json({
         newQuestion,
+      });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ message: "Server error", error: error.message });
+    }
+  },
+  update: async (req, res) => {
+    try {
+      const { id } = req.params; 
+      const { question, type, options, surveyId } = req.body; 
+
+      const existingQuestion = await Question.findById(id);
+
+      if (!existingQuestion) {
+        return res.status(404).json({ message: "Question not found" });
+      }
+
+      existingQuestion.question = question || existingQuestion.question;
+      existingQuestion.type = type || existingQuestion.type;
+      existingQuestion.options = options || existingQuestion.options;
+      existingQuestion.surveyId = surveyId || existingQuestion.surveyId;
+
+      await existingQuestion.save();
+
+     
+      return res.status(200).json({
+        message: "Question updated successfully",
+        updatedQuestion: existingQuestion,
       });
     } catch (error) {
       console.error(error);
