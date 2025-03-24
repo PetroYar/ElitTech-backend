@@ -40,7 +40,7 @@ const authController = {
       await user.save();
       return res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
-      res.status(400).json({ message: "Registration error", error });
+      res.status(400).json({ message: "Помилка регістрації", error });
     }
   },
   login: async (req, res) => {

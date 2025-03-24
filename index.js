@@ -24,7 +24,8 @@ app.use("/api/answer", answerRouter);
 const startApp = async () => {
   try {
     await mongoose.connect(
-      `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@elit.jt7wa.mongodb.net/`
+      // `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@elit.jt7wa.mongodb.net/`
+      "mongodb+srv://test:LKyfV132pV0F6vPt@cluster0.30gq2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
     );
     app.listen(5000, () => {
       console.log("server ok");
