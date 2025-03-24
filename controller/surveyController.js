@@ -37,7 +37,7 @@ const surveyController = {
         .json({ message: "Server error", error: error.message });
     }
   },
-  getAll: async (req, res) => {
+  getAllPagination: async (req, res) => {
     try {
       const { _limit = 15, _start = 0, _order = "desc" } = req.query;
       const limit = parseInt(_limit, 10);
@@ -192,23 +192,35 @@ const surveyController = {
         .json({ message: "Error retrieving survey", error });
     }
   },
+ getSurveysByUser: async (req, res) => {
+  try {
+    const { id } = req.params; 
+
+    const surveys = await Survey.find({ userId: id }, { _id: 1, title: 1 });
+
+    res.status(200).json(surveys);
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ message: "Error retrieving surveys", error });
+  }
+},
+
 
   update: async (req, res) => {
     try {
-      const { slug } = req.params; 
+      const { slug } = req.params;
       const { title, description, questionCount } = req.body;
 
       if (!slug) {
         return res.status(400).json({ message: "Survey slug is required" });
       }
 
-  
       const survey = await Survey.findOne({ slug });
       if (!survey) {
         return res.status(404).json({ message: "Survey not found" });
       }
 
-  
       if (title) survey.title = title;
       if (description) survey.description = description;
       if (questionCount !== undefined) survey.questionCount = questionCount;
