@@ -1,17 +1,21 @@
 import mongoose from "mongoose";
 import { faker } from "@faker-js/faker";
 import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
 
 import Survey from "./model/Survey.js";
 import Question from "./model/Question.js";
 import Answer from "./model/Answer.js";
 import User from "./model/User.js";
 
+dotenv.config();
+
 async function seedDatabase() {
+
   try {
     // Підключення до MongoDB
     await mongoose.connect(
-      "mongodb+srv://test:LKyfV132pV0F6vPt@cluster0.30gq2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+      `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@elit.jt7wa.mongodb.net/`
     );
 
     // Очищення попередніх даних
