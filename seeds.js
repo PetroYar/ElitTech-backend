@@ -11,47 +11,46 @@ import User from "./model/User.js";
 dotenv.config();
 
 async function seedDatabase() {
-
   try {
-    // Підключення до MongoDB
     await mongoose.connect(
       `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASS}@elit.jt7wa.mongodb.net/`
     );
 
-    // Очищення попередніх даних
     await User.deleteMany({});
     await Survey.deleteMany({});
     await Question.deleteMany({});
     await Answer.deleteMany({});
 
-    // 1. Створення 10 користувачів
-    const users = Array.from({ length: 20 }, (_, index) => ({
-      username: `user${index}`, // Генеруємо username у форматі user0, user1, ...
+    
+    const users = Array.from({ length: 5 }, (_, index) => ({
+      username: `user${index}`,
       email: `user${index}@gmail.com`,
       password: bcrypt.hashSync("test123", 7),
     }));
 
     const savedUsers = await User.insertMany(users);
 
-    // 2. Створення 10 опитувань (по одному від кожного користувача)
+    
     const surveys = await Promise.all(
-      savedUsers.map(async (user) => {
-        const title = faker.lorem.words(3);
-        const survey = new Survey({
-          title,
-          description: faker.lorem.sentence(),
-          slug: title.toLowerCase().replace(/\s+/g, "-"),
-          userId: user._id,
-          questionCount: 10,
-        });
-        return await survey.save();
-      })
+      savedUsers.flatMap((user) =>
+        Array.from({ length: 5 }, async () => {
+          const title = faker.lorem.words(3);
+          const survey = new Survey({
+            title,
+            description: faker.lorem.sentence(),
+            slug: title.toLowerCase().replace(/\s+/g, "-"),
+            userId: user._id,
+            questionCount: 10,
+          });
+          return await survey.save();
+        })
+      )
     );
 
-    // 3. Створення 10 питань для кожного опитування (з 4 варіантами відповідей)
+   
     const questions = [];
     for (const survey of surveys) {
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 5; i++) {
         const question = new Question({
           question: faker.lorem.sentence() + "?",
           type: faker.helpers.arrayElement(["radio", "checkbox", "text"]),
@@ -65,7 +64,6 @@ async function seedDatabase() {
       }
     }
 
-    // 4. Створення відповідей (кожен користувач відповідає на всі опитування)
     const answers = [];
     for (const user of savedUsers) {
       for (const survey of surveys) {
@@ -118,7 +116,6 @@ async function seedDatabase() {
     console.log(`Created ${questions.length} questions`);
     console.log(`Created ${answers.length} answers`);
 
-    // Закриття підключення
     await mongoose.connection.close();
   } catch (error) {
     console.error("Error seeding database:", error);
@@ -126,5 +123,4 @@ async function seedDatabase() {
   }
 }
 
-// Запуск seed
 seedDatabase();
