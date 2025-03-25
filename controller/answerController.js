@@ -67,7 +67,7 @@ const answerController = {
 
       const questionMap = {};
       questions.forEach((question) => {
-        questionMap[question._id.toString()] = question.question; 
+        questionMap[question._id.toString()] = question.question;
       });
 
       const answers = await Answer.find({ surveyId });
@@ -80,7 +80,7 @@ const answerController = {
       const answersStats = {};
       answers.forEach(({ userAnswers }) => {
         userAnswers.forEach(({ question, answer }) => {
-          const questionText = questionMap[question.toString()]; 
+          const questionText = questionMap[question.toString()];
           if (!answersStats[questionText]) {
             answersStats[questionText] = {};
           }
